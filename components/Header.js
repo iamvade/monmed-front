@@ -1,18 +1,21 @@
 import axios from "axios"
 import { parseCookies } from "nookies"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Container, NavbarBrand, Navbar, Nav } from "react-bootstrap"
 import { getStrapiURL } from "../utils/api"
 
-const Header = ({ user }) => {
+const Header = () => {
   const { jwt } = parseCookies()
+  const [user, setUser] = useState(null)
   useEffect(() => {
     const f = async () => {
       if (jwt) {
-        const { data: user } = await axios.get(getStrapiURL('/users/me'), { headers: { Authentication: `Bearer ${jwt}` } })
-        setUserInfo
+        const { data } = await axios.get(getStrapiURL('/users/me'), { headers: { Authentication: `Bearer ${jwt}` } })
+        console.log(data)
+        setUser(data)
       }
     }
+    f()
   }, [])
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
