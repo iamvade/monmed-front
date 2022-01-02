@@ -1,14 +1,16 @@
 import axios from "axios"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Button, Container, FloatingLabel, Form } from "react-bootstrap"
 import { setCookie, parseCookies } from "nookies"
 import { useRouter } from 'next/router'
 import { getStrapiURL } from "../utils/api"
+import { UserContext } from "../components/miscs/UserContextProvider"
 
 const Login = () => {
   const router = useRouter()
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
+  const { setUser } = useContext(UserContext)
   const handleLogin = async (event) => {
     event.preventDefault()
     axios.post(getStrapiURL('/auth/local'), {
@@ -20,11 +22,11 @@ const Login = () => {
           maxAge: 30 * 24 * 60 * 60,
           path: '/'
         })
-        console.log(response.data.jwt)
+        setUser(response.data.user)
         router.push('/')
       })
       .catch(error => {
-        console.log('An error occurred:', error.response);
+        console.log('An error occurred:', error);
       });
   }
   return (

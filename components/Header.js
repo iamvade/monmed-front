@@ -1,22 +1,9 @@
-import axios from "axios"
-import { parseCookies } from "nookies"
-import { useEffect, useState } from "react"
-import { Container, NavbarBrand, Navbar, Nav } from "react-bootstrap"
-import { getStrapiURL } from "../utils/api"
+import { useContext } from "react"
+import { Container, Nav, Navbar, NavbarBrand } from "react-bootstrap"
+import { UserContext } from "./miscs/UserContextProvider"
 
 const Header = () => {
-  const { jwt } = parseCookies()
-  const [user, setUser] = useState(null)
-  useEffect(() => {
-    const f = async () => {
-      if (jwt) {
-        const { data } = await axios.get(getStrapiURL('/users/me'), { headers: { Authentication: `Bearer ${jwt}` } })
-        console.log(data)
-        setUser(data)
-      }
-    }
-    f()
-  }, [])
+  const { user } = useContext(UserContext)
   return (
     <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
       <Container>
@@ -38,19 +25,3 @@ const Header = () => {
 }
 
 export default Header
-
-// export async function getServerSideProps(ctx) {
-//   try {
-//     console.log('cookies >>> ', cookies)
-//     if (jwt) {
-//       const { data: user } = await axios.get(getStrapiURL('/users/me'), { headers: { Authentication: `Bearer ${jwt}` } })
-//       console.log(user)
-//       return { props: { user } }
-//     } else {
-//       return { props: {} }
-//     }
-//   } catch (err) {
-//     console.log(err)
-//     return { props: {} }
-//   }
-// }
